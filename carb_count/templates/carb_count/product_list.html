@@ -1,22 +1,42 @@
-<html>
-    <head>
-        <title>Django Girls blog</title>
-    </head>
-    <body>
-        <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
-        </div>
+{% extends 'carb_count/base.html' %}
 
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My first post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        </div>
+{% block title %}
+    Product list
+{% endblock %}
 
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My second post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut f.</p>
-        </div>
-    </body>
-</html>
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Carbohydrates</th>
+                <th>Fat</th>
+                <th>Protein</th>
+                <th>kCal</th>
+                <th>Unit description</th>
+                <th>Unit weight (g)</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.pk }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.carbs.normalize }}</td>
+                    <td>{{ product.fats.normalize }}</td>
+                    <td>{{ product.proteins.normalize }}</td>
+                    <td>{{ product.calories.normalize }}</td>
+                    <td>{{ product.unit_name }}</td>
+                    <td>{{ product.unit_weight.normalize }}</td>
+                    <td><a href="{% url 'edit_product' pk=product.pk %}" class="btn btn-info" aria-label="Edit"><span
+                            class="fas fa-pencil-alt" aria-hidden="true"></span></a></td>
+                    <td><form action="{% url 'delete_product' pk=product.pk %}" method="POST">{% csrf_token %}<button type="submit" class="btn
+                    btn-warning" aria-label="Delete"><span class="fas fa-trash-alt" aria-hidden="true"></span></button></form></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

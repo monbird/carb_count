@@ -10,5 +10,3 @@ The application is also useful for healthy people as they can find out the total
  consume.
 
 To view completed project click [here](http://monbird.com/carb-count).
-
-

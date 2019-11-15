@@ -1,0 +1,39 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <title>CarbCount</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/carb_count.css' %}">
+    </head>
+    <body>
+        <h1>Carb Counting</h1>
+        <nav class="navbar navbar-expand-sm bg-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'calculator' %}">Calculator</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'product_list' %}">Product list</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'new_product' %}">Add product</a>
+                </li>
+            </ul>
+        </nav>
+        <div>
+            <h2>{% block title %}{% endblock %}</h2>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
