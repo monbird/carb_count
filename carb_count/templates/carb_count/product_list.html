@@ -5,6 +5,16 @@
 {% endblock %}
 
 {% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>{{ message.tags|title }}!</strong> {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <table class="table">
         <thead>
             <tr>
@@ -31,12 +41,49 @@
                     <td>{{ product.calories.normalize }}</td>
                     <td>{{ product.unit_name }}</td>
                     <td>{{ product.unit_weight.normalize }}</td>
-                    <td><a href="{% url 'edit_product' pk=product.pk %}" class="btn btn-info" aria-label="Edit"><span
-                            class="fas fa-pencil-alt" aria-hidden="true"></span></a></td>
-                    <td><form action="{% url 'delete_product' pk=product.pk %}" method="POST">{% csrf_token %}<button type="submit" class="btn
-                    btn-warning" aria-label="Delete"><span class="fas fa-trash-alt" aria-hidden="true"></span></button></form></td>
+                    <td>
+                        <a href="{% url 'edit_product' pk=product.pk %}" class="btn btn-info" aria-label="Edit">
+                            <span class="fas fa-pencil-alt" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning" aria-label="Delete" onclick="show_delete_modal
+                        ('{% url 'delete_product' pk=product.pk %}');">
+                            <span class="fas fa-trash-alt" aria-hidden="true"></span>
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="modal" tabindex="-1" role="dialog" id="delete-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this product?</p>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function show_delete_modal(product_url) {
+            $('#delete-modal').find('form').attr('action', product_url);
+            $('#delete-modal').modal('show');
+        }
+    </script>
 {% endblock %}
