@@ -10,7 +10,7 @@
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>{{ message.tags|title }}!</strong> {{ message }}
+                {{ message|safe }}
             </div>
         {% endfor %}
     {% endif %}
@@ -26,8 +26,9 @@
                 <th>kCal</th>
                 <th>Unit description</th>
                 <th>Unit weight (g)</th>
-                <th></th>
-                <th></th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Add to meal</th>
             </tr>
         </thead>
         <tbody>
@@ -51,6 +52,23 @@
                         ('{% url 'delete_product' pk=product.pk %}');">
                             <span class="fas fa-trash-alt" aria-hidden="true"></span>
                         </button>
+                    </td>
+                    <td>
+                        {% if not product.add_to_meal %}
+                            <form action="{% url 'add_to_meal' pk=product.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success" aria-label="Add to meal">
+                                    <span class="fas fa-plus" aria-hidden="true"></span>
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'remove_from_meal' pk=product.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" aria-label="Remove from meal">
+                                    <span class="fas fa-minus" aria-hidden="true"></span>
+                                </button>
+                            </form>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

@@ -18,8 +18,8 @@ def new_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'You have added your product successfully.')
+            product = form.save()
+            messages.success(request, 'Product <strong><i>{}</i></strong> has been added successfully to the list.'.format(product.name))
             return redirect('product_list')
         else:
             messages.error(request, 'There was a problem with adding your product.')
@@ -34,7 +34,7 @@ def edit_product(request, pk):
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             product.save()
-            messages.success(request, 'You have updated your product successfully.')
+            messages.success(request, 'Product <strong><i>{}</i></strong> has been updated successfully.'.format(product.name))
             return redirect('product_list')
         else:
             messages.error(request, 'There was a problem with updating your product.')
@@ -47,7 +47,29 @@ def delete_product(request, pk):
     if request.method == "POST":
         product = get_object_or_404(Product, pk=pk)
         product.delete()
-        messages.success(request, 'You have deleted your product successfully.')
+        messages.success(request, 'Product <strong><i>{}</i></strong> has been deleted successfully from the list.'.format(product.name))
+        return redirect('product_list')
+    else:
+        raise Http404()
+
+
+def add_to_meal(request, pk):
+    if request.method == "POST":
+        product = get_object_or_404(Product, pk=pk)
+        product.add_to_meal = True
+        product.save()
+        messages.success(request, 'Product <strong><i>{}</i></strong> has been added to the meal successfully.'.format(product.name))
+        return redirect('product_list')
+    else:
+        raise Http404()
+
+
+def remove_from_meal(request, pk):
+    if request.method == "POST":
+        product = get_object_or_404(Product, pk=pk)
+        product.add_to_meal = False
+        product.save()
+        messages.success(request, 'Product <strong><i>{}</i></strong> has been removed from the meal successfully.'.format(product.name))
         return redirect('product_list')
     else:
         raise Http404()

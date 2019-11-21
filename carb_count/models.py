@@ -9,6 +9,7 @@ class Product(models.Model):
     calories = models.DecimalField(max_digits=5, decimal_places=1, null=False)
     unit_name = models.CharField(max_length=50, null=False)
     unit_weight = models.DecimalField(max_digits=5, decimal_places=1, null=False)
+    add_to_meal = models.BooleanField(default=False, null=False)
 
     def __str__(self):
         return self.name
