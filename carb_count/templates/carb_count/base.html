@@ -35,6 +35,26 @@
                     </ul>
                 </nav>
             </header>
+            {% block messages %}
+                <div class="message-wrapper">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }} alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ message|safe }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <script>
+                    window.setTimeout(function() {
+                        $(".message-wrapper .alert.success").fadeTo(500, 0).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    }, 5000);
+                </script>
+            {% endblock %}
+
             {% block content %}
             {% endblock %}
         </div>

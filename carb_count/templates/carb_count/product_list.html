@@ -1,17 +1,6 @@
 {% extends 'carb_count/base.html' %}
 
 {% block content %}
-    <div class="message-wrapper">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {{ message.tags }} alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    {{ message|safe }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
     <div class="table-responsive table-fix-head">
         <table class="table table-dark table-hover">
             <thead>
@@ -103,14 +92,6 @@
             $('#delete-modal').find('form').attr('action', product_url);
             $('#delete-modal').modal('show');
         }
-    </script>
-
-    <script>
-        window.setTimeout(function() {
-            $(".alert.success").fadeTo(500, 0).slideUp(500, function(){
-                $(this).remove();
-            });
-        }, 5000);
     </script>
 
 {% endblock %}

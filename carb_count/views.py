@@ -25,7 +25,7 @@ def create_product(request):
             return redirect('product_list')
         else:
             messages.error(request, '<strong>Warning!</strong> There was a problem with adding your product! Please try again.')
-            return redirect('product_list')
+            return render(request, 'carb_count/product_form.html', {'form': form})
     else:
         form = ProductForm()
         return render(request, 'carb_count/product_form.html', {'form': form})
@@ -42,7 +42,7 @@ def edit_product(request, pk):
             return redirect('product_list')
         else:
             messages.error(request, '<strong>Warning!</strong> There was a problem with updating your product. Please try again.')
-            return redirect('product_list')
+            return render(request, 'carb_count/product_form.html', {'form': form})
     else:
         form = ProductForm(instance=product)
     return render(request, 'carb_count/product_form.html', {'form': form})
@@ -79,7 +79,7 @@ def remove_from_meal(request, pk):
         from_template = request.GET.get('from', None)
         if from_template == "product_list_temp":
             p_name = product.name[:15] + '...' if len(product.name) > 15 else product.name
-            messages.success(request, 'Product <strong><i>{}</i></strong> has been removed from the meal successfully.'.format(product.name))
+            messages.success(request, 'Product <strong><i>{}</i></strong> has been removed from the meal successfully.'.format(p_name))
             return redirect('product_list')
         elif from_template == "calc_temp":
             return redirect('calculator')

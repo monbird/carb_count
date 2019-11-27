@@ -3,14 +3,31 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <form method="POST" class="post-form">
+    <form method="POST" class="post-form" id="product-form">
         {% csrf_token %}
+
         {% for field in form %}
-           <div class="form-group">
-               {{ field.label_tag }}
-               {% render_field field class+="form-control" %}
-           </div>
+            {% if field.name == "name" %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {% render_field field class+="form-control" %}
+                    {{ field.errors }}
+                </div>
+            {% else %}
+                {% if forloop.counter|divisibleby:"2" %}
+                    <div class="form-row">
+                {% endif %}
+                        <div class="form-group col-md-6 {% if forloop.counter|divisibleby:"2" %}pr-md-4{% else %}pl-md-4{% endif %}">
+                            {{ field.label_tag }}
+                            {% render_field field class+="form-control" %}
+                            {{ field.errors }}
+                        </div>
+                {% if not forloop.counter|divisibleby:"2" %}
+                    </div>
+                {% endif %}
+            {% endif %}
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
+
+        <button type="submit" class="btn btn-dark">Save</button>
     </form>
 {% endblock %}
