@@ -1,8 +1,125 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    background-image: url("../images/backgrounds/3.jpg");
+    color: rgb(250, 250, 250);
+    background-image: url("../images/backgrounds/6.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+html, body {
+  height: 100%;
+}
+
+.fill {
+    min-height: 100%;
+
+}
+
+#content-wrapper {
+    background-color: rgba(29, 30, 37, 0.7);
+    margin: 0 auto;
+    padding: 45px 60px;
+}
+
+header {
+    margin-bottom: 10px;
 }
 
 h1 {
-    font-family: 'Lobster';
-    color: darkolivegreen;
+    font-family: 'Pacifico', cursive;
+    color: #CC0000;
+    text-align: center;
+}
+
+nav {
+    margin-top: 15px;
+    background-color: rgba(29, 30, 37, 0.8);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: bold;
+}
+
+nav .nav-item  a {
+    color: #33cccc;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    text-align: center;
+}
+
+nav .nav-item.active a {
+	color: #ffcc00;
+}
+
+.message-wrapper {
+    display: block;
+    min-height: 62px;
+    margin: 15px auto 10px auto;
+    text-align: center;
+}
+
+.message-wrapper .alert {
+    border: 1px solid;
+    width: 70%;
+    display: block;
+    margin: 0 auto;
+}
+
+.alert.success {
+    border-color: white;
+    color: white;
+}
+
+.alert.error {
+    border-color: red;
+    color: red;
+}
+
+.message-wrapper button.close {
+    color: white;
+}
+
+.table-fix-head {
+    overflow-y: auto;
+    height: 57vh;
+}
+
+.table-fix-head thead th {
+    position: sticky;
+    top: -1px;
+}
+
+th {
+    background: #f08628;
+    font-size: 14px;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 900 !important;
+}
+
+td {
+    font-size: 13px;
+}
+
+.table-dark {
+    background-color: rgba(29, 30, 37, 0.8);
+}
+
+a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success {
+    font-size: 13px;
+}
+
+.modal {
+    color: black;
+}
+
+.modal-header {
+    color: white;
+    background-color: rgb(246, 194, 68);
+}
+
+#modal-delete-button {
+    color: white;
 }

@@ -1,9 +1,124 @@
 {% extends 'carb_count/base.html' %}
 
-{% block title %}
-    Calculate
-{% endblock %}
-
 {% block content %}
-    <p>Wanna know total number of carbs? Not until the weekend ;)</p>
+    <div>
+        <div>
+            <label for="ratio">Carbs ratio:</label>
+            <input id="ratio" type="number" min="0" step="0.1" placeholder="0.8">
+        </div>
+        <div>
+            <label for="product-search">Add to  meal:</label>
+            <input id="product-search" placeholder="your product...">
+        </div>
+    </div>
+
+    <div>
+        <p>Carbohydrates total: <span class="output-carbs-total">?</span></p>
+        <p>Calories total: <span class="output-calories-total">?</span></p>
+    </div>
+
+    <table class="table table-dark" id="meal-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Unit description</th>
+                <th>Unit weight (g)</th>
+                <th>Quantity</th>
+                <th>Change to grams</th>
+                <th>Carbohydrates</th>
+                <th>Calories</th>
+                <th>Remove from meal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr data-carbs="{{ product.carbs }}" data-calories="{{ product.calories }}" data-unit_weight="{{ product.unit_weight }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.unit_name}}</td>
+                    <td>{{ product.unit_weight.normalize }}</td>
+                    <td>
+                        <input class="input-quantity" type="number" min="0" step="1" value="1" onchange="calculate(this)">
+                    </td>
+                    <td>
+                        <input class="input-grams" type="checkbox" onchange="calculate(this)">
+                    </td>
+                    <td class="output-carbs"></td>
+                    <td class="output-calories"></td>
+                    <td>
+                        <form action="{% url 'remove_from_meal' pk=product.pk %}?from=calc_temp" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" aria-label="Remove from meal">
+                                <span class="fas fa-minus" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                    </td>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<script>
+    var tags = [
+    "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
+    "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran",
+    "Groovy", "Haskell", "Java", "JavaScript", "Lisp", "Perl",
+    "PHP", "Python", "Ruby", "Scala", "Scheme"
+     ];
+
+    $(document).ready(function() {
+        $("#product-search").autocomplete({
+            source: tags
+        });
+    });
+</script>
+
+<script>
+    function calculate(caller) {
+        // prepare
+        var product_row = $(caller).closest('tr');
+        var product_data = product_row.data();
+        var quantity = product_row.find('.input-quantity').val();
+        var in_grams = product_row.find('.input-grams').is(':checked');
+        var target_carbs = product_row.find('.output-carbs');
+        var target_calories = product_row.find('.output-calories');
+
+        // calculate
+        if(!in_grams) {
+            var grams = quantity * product_data['unit_weight'];
+        }
+        else {
+            var grams = quantity;
+        }
+
+        var output_carbs = (product_data['carbs'] * grams) / 100;
+        output_carbs = Math.round(10 * output_carbs) / 10;
+        target_carbs.text(output_carbs);
+
+        var output_calories = (product_data['calories'] * grams) / 100;
+        output_calories = Math.round(10 * output_calories) / 10;
+        target_calories.text(output_calories);
+
+        calculate_totals();
+    }
+
+    function calculate_totals() {
+        var totals = {
+            'carbs': 0,
+            'calories': 0
+        };
+        $('#meal-table').find('tbody').find('tr').each(function(i, tr) {
+           var product_carbs = $(tr).find('.output-carbs').text();
+           var product_calories = $(tr).find('.output-calories').text();
+           totals['carbs'] += parseFloat(product_carbs);
+           totals['calories'] += parseFloat(product_calories);
+        });
+        $('.output-carbs-total').text(totals['carbs']);
+        $('.output-calories-total').text(totals['calories']);
+    }
+
+    $(document).ready(function() {
+        $(".input-quantity").change();
+    });
+</script>
 {% endblock %}
