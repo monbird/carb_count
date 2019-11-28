@@ -21,7 +21,7 @@
             <tbody>
                 {% for product in products %}
                     <tr>
-                        <td>{{ product.pk }}</td>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ product.name|truncatechars:25 }}</td>
                         <td>{{ product.carbs.normalize }}</td>
                         <td>{{ product.fats.normalize }}</td>
@@ -80,7 +80,7 @@
                         {% csrf_token %}
                         <button type="submit" class="btn btn-warning" id="modal-delete-button">Delete</button>
                     </form>
-                    <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary" id="modal-cancel-button" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

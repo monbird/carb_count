@@ -3,6 +3,11 @@
 {% load widget_tweaks %}
 
 {% block content %}
+
+    {% if edit_mode %}
+<p id="prod_form_edit_message">You are editing <strong><i>{{ product.name|truncatechars:25 }}</i></strong> product.</p>
+    {% endif %}
+
     <form method="POST" class="post-form" id="product-form">
         {% csrf_token %}
 
@@ -28,6 +33,18 @@
             {% endif %}
         {% endfor %}
 
-        <button type="submit" class="btn btn-dark">Save</button>
+        {% if edit_mode %}
+            <div class="form-row justify-content-md-center">
+                <div class="col-md-auto pl-md-3">
+                    <a href="{% url 'product_list' %}" class="btn" id="cancel-changes">Go back without making changes</a>
+                </div>
+                <div class="col-md-auto pr-md-3">
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </div>
+        {% else %}
+            <button type="submit" class="btn">Save</button>
+        {% endif %}
+
     </form>
 {% endblock %}

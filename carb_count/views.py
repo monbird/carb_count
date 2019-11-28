@@ -42,10 +42,10 @@ def edit_product(request, pk):
             return redirect('product_list')
         else:
             messages.error(request, '<strong>Warning!</strong> There was a problem with updating your product. Please try again.')
-            return render(request, 'carb_count/product_form.html', {'form': form})
+            return render(request, 'carb_count/product_form.html', {'form': form, 'edit_mode': True, 'product': product})
     else:
         form = ProductForm(instance=product)
-    return render(request, 'carb_count/product_form.html', {'form': form})
+        return render(request, 'carb_count/product_form.html', {'form': form, 'edit_mode': True, 'product': product})
 
 
 def delete_product(request, pk):

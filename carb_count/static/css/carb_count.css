@@ -61,7 +61,7 @@ nav .nav-item  a:hover {
 .message-wrapper {
     display: block;
     min-height: 62px;
-    margin: 15px auto 10px auto;
+    margin: 15px auto 0 auto;
     text-align: center;
 }
 
@@ -111,7 +111,7 @@ td {
     background-color: rgba(29, 30, 37, 0.8);
 }
 
-a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-secondary {
+a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-secondary, button.btn.btn-danger {
     font-size: 13px;
 }
 
@@ -121,11 +121,24 @@ a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-s
 
 .modal-header {
     color: white;
-    background-color: rgb(246, 194, 68);
+    background-color: rgb(240, 134, 40);
 }
 
 #modal-delete-button {
     color: white;
+    background: rgb(240, 134, 40);
+    border-color: rgb(240, 134, 40);
+    font-size: 16px;
+}
+
+#modal-delete-button:hover {
+    background: rgb(214, 109, 15);
+}
+
+#modal-cancel-button:hover {
+    color: white;
+    background: rgb(164, 164, 164);
+    border-color: rgb(164, 164, 164);
 }
 
 .errorlist {
@@ -133,34 +146,41 @@ a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-s
 }
 
 #product-form button[type="submit"] {
-    font-size: 18px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15.5px;
     color: white;
+    background: rgb(188, 38, 26);
+    border-color: rgb(188, 38, 26) !important;
     margin: 20px auto 0 auto;
     display: block;
     padding: 8px 30px;
 }
 
-/* overrides bootstrap button color */
-
-.btn-dark {
-background: rgb(188, 38, 26);
-border-color: rgb(188, 38, 26) !important;
-color: white;
-cursor: pointer;
+#cancel-changes {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15.5px;
+    color: white;
+    background: rgb(68, 71, 84);
+    border-color: rgb(68, 71, 84) !important;
+    margin: 20px auto 0 auto;
+    display: block;
+    padding: 8px 30px;
 }
 
-.btn-dark:hover, .btn-dark:focus, .btn-dark:active, .btn-dark.active, .open > .dropdown-toggle.btn-dark {
-background: rgb(166, 33, 23);
-border-color: rgb(166, 33, 23) !important;
+#product-form button[type="submit"]:hover {
+    background: rgb(166, 33, 23);
+    border-color: rgb(166, 33, 23) !important;
 }
 
-.btn-dark:active, .btn-dark.active {
-background: rgb(188, 38, 26);
-box-shadow: none;
+#cancel-changes:hover {
+    background: rgb(57, 59, 70);
+    border-color: rgb(57, 59, 70) !important;
 }
 
-.btn-dark.disabled, .btn-dark:disabled {
-background: rgb(188, 38, 26);
-opacity: .65;
-cursor: not-allowed;
+#prod_form_edit_message {
+    margin: 0 auto;
+    padding: 0 0 2px 0;
+    text-align: center;
+    font-size: 15px;
+    color: #ffcc00;
 }
