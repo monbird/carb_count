@@ -7,15 +7,15 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Carbs</th>
-                    <th>Fat</th>
-                    <th>Protein</th>
+                    <th>Carbs (g)</th>
+                    <th>Fats (g)</th>
+                    <th>Proteins (g)</th>
                     <th>kCal</th>
                     <th>Unit description</th>
                     <th>Unit weight&nbsp;(g)</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>Add&nbsp;to meal</th>
+                    <th class="align-center">Edit</th>
+                    <th class="align-center">Delete</th>
+                    <th class="align-center">Add&nbsp;to meal</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,18 +29,18 @@
                         <td>{{ product.calories.normalize }}</td>
                         <td>{{ product.unit_name|truncatechars:15 }}</td>
                         <td>{{ product.unit_weight.normalize }}</td>
-                        <td>
+                        <td class="align-center">
                             <a href="{% url 'edit_product' pk=product.pk %}" class="btn btn-info" aria-label="Edit">
                                 <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                             </a>
                         </td>
-                        <td>
+                        <td class="align-center">
                             <button type="button" class="btn btn-warning" aria-label="Delete" onclick="show_delete_modal
                             ('{% url 'delete_product' pk=product.pk %}', '{{ product.name }}');">
                                 <span class="fas fa-trash-alt" aria-hidden="true"></span>
                             </button>
                         </td>
-                        <td>
+                        <td class="align-center">
                             {% if not product.add_to_meal %}
                                 <form action="{% url 'add_to_meal' pk=product.pk %}" method="POST">
                                     {% csrf_token %}

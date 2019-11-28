@@ -20,36 +20,36 @@
     </div>
 
     <div class="table-responsive table-fix-head">
-        <table class="table table-dark" id="meal-table">
+        <table class="table table-dark table-hover" id="meal-table">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
                     <th>Unit description</th>
                     <th>Unit weight (g)</th>
-                    <th>Quantity</th>
-                    <th>Change to grams</th>
-                    <th>Carbohydrates</th>
-                    <th>Calories</th>
-                    <th>Remove from meal</th>
+                    <th class="align-center">Quantity</th>
+                    <th class="align-center">Change to grams</th>
+                    <th>Carbs (g)</th>
+                    <th>kCal</th>
+                    <th class="align-center">Remove from meal</th>
                 </tr>
             </thead>
             <tbody>
                 {% for product in products %}
                     <tr data-carbs="{{ product.carbs }}" data-calories="{{ product.calories }}" data-unit_weight="{{ product.unit_weight }}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.unit_name}}</td>
+                        <td>{{ product.name|truncatechars:25 }}</td>
+                        <td>{{ product.unit_name|truncatechars:15 }}</td>
                         <td>{{ product.unit_weight.normalize }}</td>
-                        <td>
+                        <td class="align-center">
                             <input class="input-quantity" type="number" min="0" step="1" value="1" onchange="calculate(this)">
                         </td>
-                        <td>
+                        <td  class="align-center">
                             <input class="input-grams" type="checkbox" onchange="calculate(this)">
                         </td>
                         <td class="output-carbs"></td>
                         <td class="output-calories"></td>
-                        <td>
+                        <td class="align-center">
                             <form action="{% url 'remove_from_meal' pk=product.pk %}?from=calc_temp" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger" aria-label="Remove from meal">

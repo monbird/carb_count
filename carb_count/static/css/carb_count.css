@@ -184,3 +184,7 @@ a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-s
     font-size: 15px;
     color: #ffcc00;
 }
+
+.align-center {
+    text-align: center;
+}
