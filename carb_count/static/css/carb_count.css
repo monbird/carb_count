@@ -23,7 +23,7 @@ html, body {
 #content-wrapper {
     background-color: rgba(29, 30, 37, 0.7);
     margin: 0 auto;
-    padding: 45px 60px;
+    padding: 40px 60px;
 }
 
 header {
@@ -34,6 +34,7 @@ h1 {
     font-family: 'Pacifico', cursive;
     color: #CC0000;
     text-align: center;
+    padding-bottom: 5px;
 }
 
 nav {
@@ -86,9 +87,38 @@ nav .nav-item  a:hover {
     color: white;
 }
 
+.badge-custom {
+    background-color: rgb(60, 179, 113);
+    padding: 5px 10px;
+    font-size: 13px;
+}
+
+#ratio {
+    font-size: 14px;
+    height: 25px;
+    max-width: 75px;
+}
+
+#ratio-label {
+    margin-bottom: 16px;
+}
+
+.find-add-row {
+    margin-top: 10px;
+    margin-bottom: 29px;
+}
+
+.calculator-row {
+    margin-top: 30px;
+}
+
 .table-fix-head {
     overflow-y: auto;
     height: 57vh;
+}
+
+.table-fix-head-calc {
+    height: 40vh !important;
 }
 
 .table-fix-head thead th {
@@ -187,4 +217,21 @@ a.btn.btn-info, button.btn.btn-warning, button.btn.btn-success, button.btn.btn-s
 
 .align-center {
     text-align: center;
+    vertical-align: middle;
+}
+
+.input-grams {
+    font-size: 30px;
+}
+
+#prod_list_table {
+    margin-top: 20px;
+}
+
+.ui-menu-item {
+    cursor: pointer;
+}
+
+#empty-meal {
+    color: #f08628;
 }

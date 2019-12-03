@@ -3,23 +3,63 @@
 {% block messages %}{% endblock %}
 
 {% block content %}
-    <div>
-        <div>
-            <label for="ratio">Carbs ratio:</label>
-            <input id="ratio" type="number" min="0" step="0.1" placeholder="0.8">
+    <div class="row calculator-row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    <p class="float-right">Total Carbohydrates:</p>
+                </div>
+                <div class="col-4 col-sm-6">
+                    <div class="badge badge-custom"><span class="output-carbs-total">?</span> g</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    <p class="float-right">Total Calories:</p>
+                </div>
+                <div class="col-4 col-sm-6">
+                    <div class="badge badge-custom"><span class="output-calories-total">?</span> kcal</div>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="product-search">Add to  meal:</label>
-            <input id="product-search" placeholder="your product...">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    <label id="ratio-label" class="float-right" for="ratio">Insulin-to-Carb Ratio:</label>
+                </div>
+                <div class="col-4 col-sm-6">
+                    <input id="ratio" class="form-control col-12 col-sm-6" type="number" value="{{ request.session.ratio }}" min="0" step="0.1" placeholder="e.g. 0.8" onchange="calculate_boluses(); save_ratio();">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    <p class="float-right">Immediate bolus:</p>
+                </div>
+                <div class="col-4 col-sm-6">
+                    <div class="badge badge-custom"><span class="output-immediate-bolus">?</span> u</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 col-sm-6">
+                    <p class="float-right">Delayed bolus:</p>
+                </div>
+                <div class="col-4 col-sm-6">
+                    <div class="badge badge-custom"><span class="output-delayed-bolus">?</span> u</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row find-add-row">
+        <div class="col-lg-3">
+            <label class="float-lg-right" for="product-search">Find & add:</label>
+        </div>
+        <div class="col-lg-6">
+            <input id="product-search" class="form-control form-control-sm" placeholder="your product...">
         </div>
     </div>
 
-    <div>
-        <p>Carbohydrates total: <span class="output-carbs-total">?</span></p>
-        <p>Calories total: <span class="output-calories-total">?</span></p>
-    </div>
-
-    <div class="table-responsive table-fix-head">
+    {% if products %}
+    <div class="table-responsive table-fix-head table-fix-head-calc">
         <table class="table table-dark table-hover" id="meal-table">
             <thead>
                 <tr>
@@ -42,10 +82,10 @@
                         <td>{{ product.unit_name|truncatechars:15 }}</td>
                         <td>{{ product.unit_weight.normalize }}</td>
                         <td class="align-center">
-                            <input class="input-quantity" type="number" min="0" step="1" value="1" onchange="calculate(this)">
+                            <input class="input-quantity form-control form-control-sm" type="number" min="0" step="1" value="1" onchange="calculate(this)">
                         </td>
-                        <td  class="align-center">
-                            <input class="input-grams" type="checkbox" onchange="calculate(this)">
+                        <td class="align-center">
+                                <input class="input-grams" type="checkbox" onchange="calculate(this)">
                         </td>
                         <td class="output-carbs"></td>
                         <td class="output-calories"></td>
@@ -57,27 +97,56 @@
                                 </button>
                             </form>
                         </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div id="empty-meal" class="alert text-center">
+        <h4>Meal is empty. Add your products to calculate totals.</h4>
+    </div>
+    {% endif %}
 
     <script>
-        var tags = [
-        "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
-        "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran",
-        "Groovy", "Haskell", "Java", "JavaScript", "Lisp", "Perl",
-        "PHP", "Python", "Ruby", "Scala", "Scheme"
-         ];
-
         $(document).ready(function() {
             $("#product-search").autocomplete({
-                source: tags
-            });
+                source: '{% url 'product_search' %}',
+                minLength: 2,
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url 'add_to_meal' pk=99 %}'.replace(99, ui.item.value),
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(data) {
+                            location.reload();
+                        }
+                    });
+                },
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                if(!item.selectable) {
+                    return $('<li class="ui-state-disabled">')
+                    .append("<a disabled>" + item.label + "</a>")
+                    .appendTo(ul);
+                }else{
+                    return $("<li>")
+                    .append("<a>" + item.label + "</a>")
+                    .appendTo(ul);
+                }
+            };
         });
     </script>
+
     <script>
-        function calculate(caller) {
+        var totals = {
+            'carbs': 0,
+            'calories': 0
+        };
+
+        function calculate(caller, no_totals) {
             // prepare
             var product_row = $(caller).closest('tr');
             var product_data = product_row.data();
@@ -102,26 +171,62 @@
             output_calories = Math.round(10 * output_calories) / 10;
             target_calories.text(output_calories);
 
-            calculate_totals();
+            if(!no_totals) {
+                calculate_totals();
+                calculate_boluses();
+            }
         }
 
         function calculate_totals() {
-            var totals = {
-                'carbs': 0,
-                'calories': 0
-            };
+            totals['carbs'] = 0;
+            totals['calories'] = 0;
             $('#meal-table').find('tbody').find('tr').each(function(i, tr) {
                var product_carbs = $(tr).find('.output-carbs').text();
                var product_calories = $(tr).find('.output-calories').text();
                totals['carbs'] += parseFloat(product_carbs);
                totals['calories'] += parseFloat(product_calories);
             });
-            $('.output-carbs-total').text(totals['carbs']);
-            $('.output-calories-total').text(totals['calories']);
+            var rounded_carbs = Math.round(totals['carbs'] * 100) / 100;
+            $('.output-carbs-total').text(rounded_carbs);
+            var rounded_calories = Math.round(totals['calories'] * 100) / 100;
+            $('.output-calories-total').text(rounded_calories);
+        }
+
+        function calculate_boluses() {
+            var ratio = parseFloat($('#ratio').val());
+            if(isNaN(ratio) || ratio < 0) {
+                ratio = 1;
+            }
+            var immediate_b = ratio * totals['carbs'] / 10;
+            immediate_b = Math.round(immediate_b * 100) / 100;
+            var delayed_b = (totals['calories'] - 4 * totals['carbs']) / 100;
+            delayed_b = Math.round(delayed_b * 100) / 100;
+            $('.output-immediate-bolus').text(immediate_b);
+            $('.output-delayed-bolus').text(delayed_b);
+        }
+
+        function save_ratio() {
+           var ratio = parseFloat($('#ratio').val());
+           console.log(ratio);
+           if(!isNaN(ratio) && ratio >= 0) {
+                $.ajax({
+                    type: "POST",
+                    url: '{% url 'calculator' %}',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'ratio': ratio
+                    }
+                });
+            }
         }
 
         $(document).ready(function() {
-            $(".input-quantity").change();
+            $('#meal-table').find('tbody').find('tr').each(function(i, tr) {
+                var caller = $(tr).find('.input-quantity');
+                calculate(caller, true);
+            });
+            calculate_totals();
+            calculate_boluses();
         });
     </script>
 {% endblock %}
