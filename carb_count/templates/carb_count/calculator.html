@@ -207,7 +207,6 @@
 
         function save_ratio() {
            var ratio = parseFloat($('#ratio').val());
-           console.log(ratio);
            if(!isNaN(ratio) && ratio >= 0) {
                 $.ajax({
                     type: "POST",
