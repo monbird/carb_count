@@ -1,18 +1,38 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
+
 from .models import Product
 from .forms import ProductForm
 
 
 def calculator(request):
-    products = Product.objects.filter(add_to_meal=True)
-    return render(request, 'carb_count/calculator.html', {'products': products})
+    if request.POST:
+        ratio = request.POST.get('ratio', None)
+        request.session['ratio'] = ratio
+        return JsonResponse({})
+    else:
+        products = Product.objects.filter(add_to_meal=True)
+        return render(request, 'carb_count/calculator.html', {'products': products})
 
 
 def product_list(request):
     products = Product.objects.all()
     return render(request, 'carb_count/product_list.html', {'products': products})
+
+
+def product_search(request):
+    term = request.GET.get('term', None)
+    matching_products = Product.objects.filter(name__icontains=term)
+    array = []
+    for product in matching_products:
+        if product.add_to_meal:
+            name = '{} (already on your list)'.format(product.name)
+        else:
+            name = product.name
+        array.append({'label': name, 'value': product.pk, 'selectable': not product.add_to_meal})
+
+    return JsonResponse(array, safe=False)
 
 
 def create_product(request):
@@ -64,9 +84,12 @@ def add_to_meal(request, pk):
         product = get_object_or_404(Product, pk=pk)
         product.add_to_meal = True
         product.save()
-        p_name = product.name[:15] + '...' if len(product.name) > 15 else product.name
-        messages.success(request, 'Product <strong><i>{}</i></strong> has been added to the meal successfully.'.format(p_name))
-        return redirect('product_list')
+        if request.is_ajax():
+            return JsonResponse({}, status=200)
+        else:
+            p_name = product.name[:15] + '...' if len(product.name) > 15 else product.name
+            messages.success(request, 'Product <strong><i>{}</i></strong> has been added to the meal successfully.'.format(p_name))
+            return redirect('product_list')
     else:
         raise Http404()
 
